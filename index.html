@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,
+    user-scalable=0">
+    <title>进制转换器</title>
+    <script>
+        //rem布局插件
+        (function flexible(window, document) {
+            var docEl = document.documentElement
+            var dpr = window.devicePixelRatio || 1
+
+            // adjust body font size
+            function setBodyFontSize() {
+                if (document.body) {
+                    document.body.style.fontSize = (12 * dpr) + 'px'
+                }
+                else {
+                    document.addEventListener('DOMContentLoaded', setBodyFontSize)
+                }
+            }
+            setBodyFontSize();
+
+            // set 1rem = viewWidth / 10
+            function setRemUnit() {
+                var rem = docEl.clientWidth / 20
+                docEl.style.fontSize = rem + 'px'
+            }
+
+            setRemUnit()
+
+            // reset rem unit on page resize
+            window.addEventListener('resize', setRemUnit)
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                    setRemUnit()
+                }
+            })
+
+            // detect 0.5px supports
+            if (dpr >= 2) {
+                var fakeBody = document.createElement('body')
+                var testElement = document.createElement('div')
+                testElement.style.border = '.5px solid transparent'
+                fakeBody.appendChild(testElement)
+                docEl.appendChild(fakeBody)
+                if (testElement.offsetHeight === 1) {
+                    docEl.classList.add('hairlines')
+                }
+                docEl.removeChild(fakeBody)
+            }
+        }(window, document))
+    </script>
+    <style>
+        @media screen and (max-width:375px) {
+            html {
+                font-size: 18.75px !important;
+            }
+        }
+
+        @media screen and (min-width:1080px) {
+            html {
+                font-size: 54px !important;
+            }
+        }
+
+
+        body {
+            min-width: 320px;
+            max-width: 1080px;
+            margin: 0 auto;
+            color: #666;
+            line-height: 1.5;
+            font-family: -apple-system, Helvetica, sans-serif;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        button,
+        input {
+            /* "\5B8B\4F53" 就是宋体的意思 这样浏览器兼容性比较好 */
+            font-family: Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, "\5B8B\4F53", sans-serif;
+            /* 默认有灰色边框我们需要手动去掉 */
+            border: 1px solid #ccc;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #666;
+        }
+
+        ul li {
+
+            list-style: none;
+        }
+
+        h1 {
+            font-size: .6rem;
+            margin-top: .5208rem;
+            margin-bottom: 0.7rem;
+        }
+
+
+
+
+        .w {
+            width: 10rem;
+            margin: 0 auto;
+        }
+
+        .result {
+            margin-left: 5.5rem;
+            margin-top: 1.2rem;
+            font-size: .6rem;
+            display: flex;
+
+        }
+
+        .result-left {
+            margin-right: .7rem;
+        }
+
+        .result-right {
+            margin-left: .7rem;
+        }
+
+        .result select {
+            width: 4.5rem;
+            height: 2rem;
+            margin: 0 .1042rem;
+            line-height: .7292rem;
+        }
+
+        .result p {
+            font-size: .7rem;
+            height: 2rem;
+            line-height: 2rem;
+        }
+
+        .convert {
+
+            position: relative;
+            text-align: center;
+        }
+
+        .convert .text {
+            position: relative;
+            width: 12rem;
+            height: 2.5rem;
+
+        }
+
+        .convert input {
+            margin: 0;
+            width: 10.8rem;
+            height: 2.2rem;
+            padding: .0521rem;
+            font-size: .8rem;
+        }
+
+        .convert button {
+            position: absolute;
+            margin-left: -2.2rem;
+            width: 2.2rem;
+            height: 2.2rem;
+            font-size: .7rem;
+            background-color: #f47c3c;
+            color: #fff;
+        }
+
+        #binaryOutput {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: .8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="convert w">
+        <h1>进制转换器 </h1>
+        <div class="text">
+            <input type="text" id="decimalInput" placeholder="请输入你的数字">
+            <button id="btn">转换</button>
+        </div>
+
+    </div>
+
+
+    <div class="result ">
+        <p class="result-left">转换为</p>
+        <select name="" id="binary">
+            <option value="2">二进制</option>
+            <option value="8">八进制</option>
+            <option value="10">十进制</option>
+            <option value="16">十六进制</option>
+        </select>
+        <p class="result-right">结果为:</p>
+    </div>
+    <div class="w" id="binaryOutput"></div>
+    <script>
+        //注册事件
+        document.querySelector('#btn').addEventListener('click', () => {
+            var decimalInput = document.getElementById("decimalInput").value;
+            var binaryOutput = document.getElementById("binaryOutput");
+            let b = +document.querySelector('#binary').value;
+            console.log(b);
+            // Convert decimal to binary
+            var binary = parseInt(decimalInput, 10).toString(b);
+
+            binaryOutput.innerHTML = binary;
+        })
+
+
+
+        // function convertToBinary() {
+        //     var decimalInput = document.getElementById("decimalInput").value;
+        //     var binaryOutput = document.getElementById("binaryOutput");
+
+        //     // Convert decimal to binary
+        //     var binary = parseInt(decimalInput, 10).toString(2);
+
+        //     binaryOutput.innerHTML = "结果为: " + binary;
+
+        // }
+    </script>
+</body>
+
+</html>
